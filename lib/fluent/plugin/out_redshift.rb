@@ -21,6 +21,8 @@ class RedshiftOutput < BufferedOutput
   end
 
   config_param :record_log_tag, :string, :default => 'log'
+  config_param :aws_region, :string, :default => nil,
+               :desc => "AWS region where S3 bucket and Redshift cluster are in."
   # s3
   config_param :aws_key_id, :string, :secret => true, :default => nil,
                :desc => "AWS access key id to access s3 bucket."
@@ -132,8 +134,10 @@ DESC
       }
     end
     options[:endpoint] = @s3_endpoint if @s3_endpoint
-    @s3 = AWS::S3::Client.new(options)
-    @bucket = @s3.bucket(@s3_bucket)
+    options[:region] = @aws_region
+    @s3_client = Aws::S3::Client.new(options)
+    @s3_resource = Aws::S3::Resource.new(client: @s3_client)
+    @bucket = @s3_resource.bucket(@s3_bucket)
     @redshift_connection = RedshiftConnection.new(@db_conf)
   end
 

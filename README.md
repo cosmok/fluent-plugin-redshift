@@ -16,6 +16,8 @@ Format:
     <match my.tag>
         type redshift
 
+        aws_region YOUR_AWS_REGION
+
         # s3 (for copying data to redshift)
         aws_key_id YOUR_AWS_KEY_ID
         aws_sec_key YOUR_AWS_SECRET_KEY
@@ -23,7 +25,7 @@ Format:
         aws_iam_role arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME
 
         s3_bucket YOUR_S3_BUCKET
-        s3_endpoint YOUR_S3_BUCKET_END_POINT
+        s3_endpoint YOUR_S3_BUCKET_END_POINT (needs to be a full URL like: https://s3.amazonaws.com)
         path YOUR_S3_PATH
         timestamp_key_format year=%Y/month=%m/day=%d/hour=%H/%Y%m%d-%H%M
         s3_server_side_encryption S3_SERVER_SIDE_ENCRYPTION
