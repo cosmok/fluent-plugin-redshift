@@ -120,7 +120,6 @@ DESC
                              end
     @copy_sql_template = build_redshift_copy_sql_template
     @maintenance_monitor = MaintenanceMonitor.new(@maintenance_file_path)
-    @s3_server_side_encryption = @s3_server_side_encryption.to_sym if s3_server_side_encryption
   end
 
   def start
@@ -174,9 +173,10 @@ DESC
     s3path = create_s3path(@bucket, @path)
 
     # upload gz to s3
-    @bucket.object(s3path).put_object(:body => Pathname.new(tmp.path),
-                                  :acl => "bucket_owner_full_control",
-                                  :server_side_encryption => @s3_server_side_encryption)
+    @bucket.object(s3path).upload_file(tmp.path, {
+                                        :acl => 'bucket-owner-full-control',
+                                        :server_side_encryption => @s3_server_side_encryption
+    })
 
     # close temp file
     tmp.close!
